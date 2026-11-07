@@ -1,0 +1,30 @@
+# Render Blueprint for the Daily Counter API.
+# Render dashboard -> New -> Blueprint -> pick this repo. You'll be asked for
+# the two `sync: false` values (MongoDB URI and the frontend URL).
+services:
+  - type: web
+    name: daily-counter-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install --omit=dev
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: "22"
+      - key: JWT_SECRET
+        generateValue: true
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      # Frontend proxies /api (vercel.json), so the cookie is first-party.
+      - key: COOKIE_SAMESITE
+        value: lax
+      - key: DEFAULT_TIMEZONE
+        value: Africa/Lagos
+      - key: MONGODB_URI
+        sync: false
+      - key: CLIENT_ORIGIN
+        sync: false
