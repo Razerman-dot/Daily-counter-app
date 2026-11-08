@@ -17,9 +17,10 @@ import { errorHandler, notFound } from './middleware/errors.js';
 export function createApp() {
   const app = express();
 
-  // Render/Railway/Heroku sit behind one proxy hop; needed for correct client
-  // IPs (rate limiting) and for Secure cookies over the proxied HTTPS.
-  app.set('trust proxy', 1);
+  // Trust exactly the proxies we sit behind (Render = 1 hop; Vercel's /api
+  // rewrite adds another). Needed so rate limiting sees each visitor's real
+  // IP instead of the proxy's, and for Secure cookies over proxied HTTPS.
+  app.set('trust proxy', env.TRUST_PROXY_HOPS);
   app.disable('x-powered-by');
 
   app.use(helmet());

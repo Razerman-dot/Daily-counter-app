@@ -22,6 +22,8 @@ const schema = z.object({
   COOKIE_SAMESITE: z.enum(['lax', 'strict', 'none', '']).optional(),
   COOKIE_SECURE: boolish,
   DEFAULT_TIMEZONE: z.string().default('Africa/Lagos'),
+  // Number of reverse proxies in front of the app (Render = 1; Vercel rewrite + Render = 2).
+  TRUST_PROXY_HOPS: z.coerce.number().int().min(0).max(5).default(1),
 });
 
 // Tests run without a .env file, so give them safe defaults.
